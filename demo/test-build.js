@@ -25,6 +25,7 @@ function createCanvas() {
 }
 
 function calculateFitSize(context, initialFont, text, targetWidth) {
+	const conservativeTarget = targetWidth - 0.3;
 	const currentFontSize = getPx(initialFont);
 
 	const getWidthAt = font => {
@@ -34,16 +35,16 @@ function calculateFitSize(context, initialFont, text, targetWidth) {
 
 	const currentWidth = getWidthAt(initialFont);
 
-	if (currentWidth < targetWidth && currentWidth > targetWidth - 0.5) {
+	if (currentWidth < conservativeTarget && currentWidth > conservativeTarget - 0.5) {
 		return currentFontSize
 	}
 
-	let size = getNewFontSizeUsingRatio(targetWidth, currentWidth, currentFontSize);
+	let size = getNewFontSizeUsingRatio(conservativeTarget, currentWidth, currentFontSize);
 
-	const tooHigh = size => getWidthAt(fontAtSize(initialFont, size)) > targetWidth;
+	const tooHigh = size => getWidthAt(fontAtSize(initialFont, size)) >= conservativeTarget;
 
 	while (tooHigh(size)) {
-		size = size - 0.2;
+		size = size - 0.1;
 	}
 
 	return size
