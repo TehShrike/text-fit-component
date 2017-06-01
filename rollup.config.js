@@ -11,7 +11,8 @@ export default {
 		commonjs(),
 		svelte(),
 		babel({
-			exclude: 'node_modules/**',
+			babelrc: false,
+			// exclude: 'node_modules/**',
 			presets: [
 				[
 					'es2015',

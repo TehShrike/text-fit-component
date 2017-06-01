@@ -1,197 +1,222 @@
 (function () {
 'use strict';
 
-const pxRegex = () => /\d+px/;
+var pxRegex = function pxRegex() {
+	return (/\d+px/
+	);
+};
 
-const getPx = str => parseInt(pxRegex().exec(str)[0], 10);
-const fontAtSize = (font, size) => font.replace(pxRegex(), () => size + 'px');
-const join = (...args) => args.join(' ');
+var getPx = function getPx(str) {
+	return parseInt(pxRegex().exec(str)[0], 10);
+};
+var fontAtSize = function fontAtSize(font, size) {
+	return font.replace(pxRegex(), function () {
+		return size + 'px';
+	});
+};
+var join = function join() {
+	for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+		args[_key] = arguments[_key];
+	}
+
+	return args.join(' ');
+};
 
 var index = function getTextFitSize(containerElement, text) {
-	const canvasContext = createCanvas();
-	const containerComputedStyles = window.getComputedStyle(containerElement);
-	const font = getFontString(containerComputedStyles);
-	const targetWidth = getPx(containerComputedStyles.getPropertyValue('width'));
+	var canvasContext = createCanvas();
+	var containerComputedStyles = window.getComputedStyle(containerElement);
+	var font = getFontString(containerComputedStyles);
+	var targetWidth = getPx(containerComputedStyles.getPropertyValue('width'));
 
-	return calculateFitSize(canvasContext, font, text, targetWidth)
+	return calculateFitSize(canvasContext, font, text, targetWidth);
 };
 
 function createCanvas() {
-	const canvas = document.createElement('canvas');
+	var canvas = document.createElement('canvas');
 	canvas.setAttribute('width', '1px');
 	canvas.setAttribute('height', '1px');
 
-	return canvas.getContext('2d')
+	return canvas.getContext('2d');
 }
 
 function calculateFitSize(context, initialFont, text, targetWidth) {
-	const conservativeTarget = targetWidth - 0.3;
-	const currentFontSize = getPx(initialFont);
+	var conservativeTarget = targetWidth - 0.3;
+	var currentFontSize = getPx(initialFont);
 
-	const getWidthAt = font => {
+	var getWidthAt = function getWidthAt(font) {
 		context.font = font;
-		return context.measureText(text).width
+		return context.measureText(text).width;
 	};
 
-	const currentWidth = getWidthAt(initialFont);
+	var currentWidth = getWidthAt(initialFont);
 
 	if (currentWidth < conservativeTarget && currentWidth > conservativeTarget - 0.5) {
-		return currentFontSize
+		return currentFontSize;
 	}
 
-	let size = getNewFontSizeUsingRatio(conservativeTarget, currentWidth, currentFontSize);
+	var size = getNewFontSizeUsingRatio(conservativeTarget, currentWidth, currentFontSize);
 
-	const tooHigh = size => getWidthAt(fontAtSize(initialFont, size)) >= conservativeTarget;
+	var tooHigh = function tooHigh(size) {
+		return getWidthAt(fontAtSize(initialFont, size)) >= conservativeTarget;
+	};
 
 	while (tooHigh(size)) {
 		size = size - 0.1;
 	}
 
-	return size
+	return size;
 }
 
 function getNewFontSizeUsingRatio(targetWidth, currentWidth, currentFontSize) {
-	const ratio = targetWidth / currentWidth;
-	return currentFontSize * ratio
+	var ratio = targetWidth / currentWidth;
+	return currentFontSize * ratio;
 }
 
 function getFontString(computedStyles) {
-	const v = p => computedStyles.getPropertyValue(p);
+	var v = function v(p) {
+		return computedStyles.getPropertyValue(p);
+	};
 
-	return v('font')
-		|| join(v('font-style'),
-			v('font-variant'),
-			v('font-weight'),
-			v('font-stretch'),
-			v('font-size'),
-			// v('line-height'), line heights confuse Firefox I guess?
-			v('font-family'))
+	return v('font') || join(v('font-style'), v('font-variant'), v('font-weight'), v('font-stretch'), v('font-size'),
+	// v('line-height'), line heights confuse Firefox I guess?
+	v('font-family'));
 }
 
-function noop () {}
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) {
+  return typeof obj;
+} : function (obj) {
+  return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+};
 
-function assign ( target ) {
-	var k, source, i = 1, len = arguments.length;
-	for ( ; i < len; i++ ) {
+function noop() {}
+
+function assign(target) {
+	var k,
+	    source,
+	    i = 1,
+	    len = arguments.length;
+	for (; i < len; i++) {
 		source = arguments[i];
-		for ( k in source ) target[k] = source[k];
+		for (k in source) {
+			target[k] = source[k];
+		}
 	}
 
 	return target;
 }
 
-function appendNode ( node, target ) {
-	target.appendChild( node );
+function appendNode(node, target) {
+	target.appendChild(node);
 }
 
-function insertNode ( node, target, anchor ) {
-	target.insertBefore( node, anchor );
+function insertNode(node, target, anchor) {
+	target.insertBefore(node, anchor);
 }
 
-function detachNode ( node ) {
-	node.parentNode.removeChild( node );
+function detachNode(node) {
+	node.parentNode.removeChild(node);
 }
 
-function createElement ( name ) {
-	return document.createElement( name );
+function createElement(name) {
+	return document.createElement(name);
 }
 
-function createText ( data ) {
-	return document.createTextNode( data );
+function createText(data) {
+	return document.createTextNode(data);
 }
 
-function differs ( a, b ) {
-	return ( a !== b ) || ( a && ( typeof a === 'object' ) || ( typeof a === 'function' ) );
+function differs(a, b) {
+	return a !== b || a && (typeof a === 'undefined' ? 'undefined' : _typeof(a)) === 'object' || typeof a === 'function';
 }
 
-function dispatchObservers ( component, group, newState, oldState ) {
-	for ( var key in group ) {
-		if ( !( key in newState ) ) continue;
+function dispatchObservers(component, group, newState, oldState) {
+	for (var key in group) {
+		if (!(key in newState)) continue;
 
-		var newValue = newState[ key ];
-		var oldValue = oldState[ key ];
+		var newValue = newState[key];
+		var oldValue = oldState[key];
 
-		if ( differs( newValue, oldValue ) ) {
-			var callbacks = group[ key ];
-			if ( !callbacks ) continue;
+		if (differs(newValue, oldValue)) {
+			var callbacks = group[key];
+			if (!callbacks) continue;
 
-			for ( var i = 0; i < callbacks.length; i += 1 ) {
+			for (var i = 0; i < callbacks.length; i += 1) {
 				var callback = callbacks[i];
-				if ( callback.__calling ) continue;
+				if (callback.__calling) continue;
 
 				callback.__calling = true;
-				callback.call( component, newValue, oldValue );
+				callback.call(component, newValue, oldValue);
 				callback.__calling = false;
 			}
 		}
 	}
 }
 
-function get ( key ) {
-	return key ? this._state[ key ] : this._state;
+function get$$1(key) {
+	return key ? this._state[key] : this._state;
 }
 
-function fire ( eventName, data ) {
-	var handlers = eventName in this._handlers && this._handlers[ eventName ].slice();
-	if ( !handlers ) return;
+function fire(eventName, data) {
+	var handlers = eventName in this._handlers && this._handlers[eventName].slice();
+	if (!handlers) return;
 
-	for ( var i = 0; i < handlers.length; i += 1 ) {
-		handlers[i].call( this, data );
+	for (var i = 0; i < handlers.length; i += 1) {
+		handlers[i].call(this, data);
 	}
 }
 
-function observe ( key, callback, options ) {
-	var group = ( options && options.defer ) ? this._observers.post : this._observers.pre;
+function observe(key, callback, options) {
+	var group = options && options.defer ? this._observers.post : this._observers.pre;
 
-	( group[ key ] || ( group[ key ] = [] ) ).push( callback );
+	(group[key] || (group[key] = [])).push(callback);
 
-	if ( !options || options.init !== false ) {
+	if (!options || options.init !== false) {
 		callback.__calling = true;
-		callback.call( this, this._state[ key ] );
+		callback.call(this, this._state[key]);
 		callback.__calling = false;
 	}
 
 	return {
-		cancel: function () {
-			var index = group[ key ].indexOf( callback );
-			if ( ~index ) group[ key ].splice( index, 1 );
+		cancel: function cancel() {
+			var index = group[key].indexOf(callback);
+			if (~index) group[key].splice(index, 1);
 		}
 	};
 }
 
-function on ( eventName, handler ) {
-	if ( eventName === 'teardown' ) return this.on( 'destroy', handler );
+function on(eventName, handler) {
+	if (eventName === 'teardown') return this.on('destroy', handler);
 
-	var handlers = this._handlers[ eventName ] || ( this._handlers[ eventName ] = [] );
-	handlers.push( handler );
+	var handlers = this._handlers[eventName] || (this._handlers[eventName] = []);
+	handlers.push(handler);
 
 	return {
-		cancel: function () {
-			var index = handlers.indexOf( handler );
-			if ( ~index ) handlers.splice( index, 1 );
+		cancel: function cancel() {
+			var index = handlers.indexOf(handler);
+			if (~index) handlers.splice(index, 1);
 		}
 	};
 }
 
-function set ( newState ) {
-	this._set( assign( {}, newState ) );
+function set$$1(newState) {
+	this._set(assign({}, newState));
 	this._root._flush();
 }
 
-function _flush () {
-	if ( !this._renderHooks ) return;
+function _flush() {
+	if (!this._renderHooks) return;
 
-	while ( this._renderHooks.length ) {
+	while (this._renderHooks.length) {
 		this._renderHooks.pop()();
 	}
 }
 
 var proto = {
-	get: get,
+	get: get$$1,
 	fire: fire,
 	observe: observe,
 	on: on,
-	set: set,
+	set: set$$1,
 	_flush: _flush
 };
 
