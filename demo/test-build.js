@@ -65,6 +65,10 @@ function assign ( target ) {
 	return target;
 }
 
+function appendNode ( node, target ) {
+	target.appendChild( node );
+}
+
 function insertNode ( node, target, anchor ) {
 	target.insertBefore( node, anchor );
 }
@@ -390,6 +394,14 @@ function create_main_fragment(state, component) {
 		}
 	});
 
+	var text_3 = createText("\n");
+	var p_2 = createElement('p');
+	appendNode(createText("Check it out "), p_2);
+	var a = createElement('a');
+	appendNode(a, p_2);
+	a.href = "https://github.com/TehShrike/text-fit-component";
+	appendNode(createText("on Github"), a);
+
 	return {
 		mount: function mount(target, anchor) {
 			insertNode(h1, target, anchor);
@@ -399,6 +411,8 @@ function create_main_fragment(state, component) {
 			insertNode(p, target, anchor);
 			insertNode(text_2, target, anchor);
 			insertNode(p_1, target, anchor);
+			insertNode(text_3, target, anchor);
+			insertNode(p_2, target, anchor);
 		},
 
 		unmount: function unmount() {
@@ -409,6 +423,8 @@ function create_main_fragment(state, component) {
 			detachNode(p);
 			detachNode(text_2);
 			detachNode(p_1);
+			detachNode(text_3);
+			detachNode(p_2);
 		},
 
 		destroy: function destroy() {
