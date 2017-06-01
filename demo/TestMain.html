@@ -1,5 +1,5 @@
 <h1>
-	<FitText text="wazzup" />
+	<FitText text="{{wazzup}}" />
 </h1>
 <h2>
 	<FitText text="You seem pretty cool" />
@@ -17,9 +17,37 @@
 <script>
 import FitText from '../Component.html'
 
+const times = (times, char) => {
+	let result = ''
+	for (let i = 0; i < times; ++i) {
+		result += char
+	}
+	return result
+}
+
 export default {
+	data() {
+		return {
+			zs: 2
+		}
+	},
+	oncreate() {
+		setTimeout(() => this.nextZ(), 1000)
+	},
 	components: {
 		FitText
+	},
+	computed: {
+		wazzup: zs => 'wa' + times(zs, 'z') + 'up'
+	},
+	methods: {
+		nextZ() {
+			const zs = this.get('zs')
+			this.set({
+				zs: zs + 1
+			})
+			setTimeout(() => this.nextZ(), zs * 1000)
+		}
 	}
 }
 </script>

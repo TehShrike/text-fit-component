@@ -195,7 +195,7 @@ var proto = {
 	_flush: _flush
 };
 
-var template = function () {
+var template$1 = function () {
 	return {
 		data: function data() {
 			return {
@@ -205,7 +205,12 @@ var template = function () {
 			};
 		},
 		oncreate: function oncreate() {
+			var _this = this;
+
 			this.recalculate();
+			this.observe('text', function () {
+				return _this.recalculate();
+			});
 		},
 
 		methods: {
@@ -222,15 +227,15 @@ var template = function () {
 				});
 			},
 			onResize: function onResize() {
-				var _this = this;
+				var _this2 = this;
 
 				if (!this.get('resizing')) {
 					this.set({
 						resizing: true
 					});
 					window.requestAnimationFrame(function () {
-						_this.recalculate();
-						_this.set({
+						_this2.recalculate();
+						_this2.set({
 							resizing: false
 						});
 					});
@@ -325,7 +330,7 @@ function create_if_block(state, component) {
 function Component(options) {
 	options = options || {};
 	this.refs = {};
-	this._state = assign(template.data(), options.data);
+	this._state = assign(template$1.data(), options.data);
 
 	this._observers = {
 		pre: Object.create(null),
@@ -343,13 +348,13 @@ function Component(options) {
 	if (options.target) this._fragment.mount(options.target, null);
 
 	if (options._root) {
-		options._root._renderHooks.push(template.oncreate.bind(this));
+		options._root._renderHooks.push(template$1.oncreate.bind(this));
 	} else {
-		template.oncreate.call(this);
+		template$1.oncreate.call(this);
 	}
 }
 
-assign(Component.prototype, template.methods, proto);
+assign(Component.prototype, template$1.methods, proto);
 
 Component.prototype._set = function _set(newState) {
 	var oldState = this._state;
@@ -370,13 +375,63 @@ Component.prototype.teardown = Component.prototype.destroy = function destroy(de
 	this._torndown = true;
 };
 
+function recompute(state, newState, oldState, isInitial) {
+	if (isInitial || 'zs' in newState && differs(state.zs, oldState.zs)) {
+		state.wazzup = newState.wazzup = template.computed.wazzup(state.zs);
+	}
+}
+
+var template = function () {
+	var times = function times(_times, char) {
+		var result = '';
+		for (var i = 0; i < _times; ++i) {
+			result += char;
+		}
+		return result;
+	};
+
+	return {
+		data: function data() {
+			return {
+				zs: 2
+			};
+		},
+		oncreate: function oncreate() {
+			var _this = this;
+
+			setTimeout(function () {
+				return _this.nextZ();
+			}, 1000);
+		},
+
+		computed: {
+			wazzup: function wazzup(zs) {
+				return 'wa' + times(zs, 'z') + 'up';
+			}
+		},
+		methods: {
+			nextZ: function nextZ() {
+				var _this2 = this;
+
+				var zs = this.get('zs');
+				this.set({
+					zs: zs + 1
+				});
+				setTimeout(function () {
+					return _this2.nextZ();
+				}, zs * 1000);
+			}
+		}
+	};
+}();
+
 function create_main_fragment(state, component) {
 	var h1 = createElement('h1');
 
 	var fittext = new Component({
 		target: h1,
 		_root: component._root,
-		data: { text: "wazzup" }
+		data: { text: state.wazzup }
 	});
 
 	var text = createText("\n");
@@ -430,6 +485,14 @@ function create_main_fragment(state, component) {
 			insertNode(p_2, target, anchor);
 		},
 
+		update: function update(changed, state) {
+			var fittext_changes = {};
+
+			if ('wazzup' in changed) fittext_changes.text = state.wazzup;
+
+			if (Object.keys(fittext_changes).length) fittext.set(fittext_changes);
+		},
+
 		unmount: function unmount() {
 			detachNode(h1);
 			detachNode(text);
@@ -453,7 +516,8 @@ function create_main_fragment(state, component) {
 
 function TestMain$1(options) {
 	options = options || {};
-	this._state = options.data || {};
+	this._state = assign(template.data(), options.data);
+	recompute(this._state, this._state, {}, true);
 
 	this._observers = {
 		pre: Object.create(null),
@@ -471,14 +535,22 @@ function TestMain$1(options) {
 	this._fragment = create_main_fragment(this._state, this);
 	if (options.target) this._fragment.mount(options.target, null);
 	this._flush();
+
+	if (options._root) {
+		options._root._renderHooks.push(template.oncreate.bind(this));
+	} else {
+		template.oncreate.call(this);
+	}
 }
 
-assign(TestMain$1.prototype, proto);
+assign(TestMain$1.prototype, template.methods, proto);
 
 TestMain$1.prototype._set = function _set(newState) {
 	var oldState = this._state;
 	this._state = assign({}, oldState, newState);
+	recompute(this._state, newState, oldState, false);
 	dispatchObservers(this, this._observers.pre, newState, oldState);
+	this._fragment.update(newState, this._state);
 	dispatchObservers(this, this._observers.post, newState, oldState);
 	this._flush();
 };

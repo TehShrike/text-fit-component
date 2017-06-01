@@ -19,6 +19,7 @@ export default {
 	},
 	oncreate() {
 		this.recalculate()
+		this.observe('text', () => this.recalculate())
 	},
 	methods: {
 		recalculate() {
