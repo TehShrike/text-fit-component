@@ -8,6 +8,8 @@ Uses [get-text-fit-size](https://github.com/TehShrike/get-text-fit-size/).
 
 Automatically adjust on window resize.
 
+Doesn't work in IE or Edge yet.
+
 ## Example
 
 ```html
