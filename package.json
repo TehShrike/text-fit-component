@@ -2,9 +2,11 @@
   "name": "text-fit-component",
   "version": "0.0.0",
   "description": "Fits text to match the width of its parent",
-  "main": "index.js",
+  "main": "build.js",
+  "module": "build.mjs",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "rollup -c -i Component.html",
+    "test:build": "rollup -c -f iife -i demo/test-index.js -o demo/test-build.js"
   },
   "repository": {
     "type": "git",
@@ -22,5 +24,19 @@
   "bugs": {
     "url": "https://github.com/TehShrike/text-fit-component/issues"
   },
-  "homepage": "https://github.com/TehShrike/text-fit-component#readme"
+  "homepage": "https://github.com/TehShrike/text-fit-component#readme",
+  "devDependencies": {
+    "babel-plugin-external-helpers": "6.22.0",
+    "babel-preset-es2015": "6.24.1",
+    "rollup": "0.41.6",
+    "rollup-plugin-babel": "2.7.1",
+    "rollup-plugin-commonjs": "8.0.2",
+    "rollup-plugin-node-resolve": "3.0.0",
+    "rollup-plugin-svelte": "1.8.1",
+    "rollup-watch": "3.2.2",
+    "svelte-cli": "1.3.6"
+  },
+  "dependencies": {
+    "get-text-fit-size": "1.0.1"
+  }
 }

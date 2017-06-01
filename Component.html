@@ -1,0 +1,51 @@
+<:Window on:resize='onResize()'/>
+
+<div ref:container class="center-container" style="font-size: {{size}};">
+	{{#if renderText}}
+		{{text}}
+	{{/if}}
+</div>
+
+<script>
+import getTextFitSize from 'get-text-fit-size'
+
+export default {
+	data() {
+		return {
+			renderText: false,
+			size: 'inherit',
+			text: ''
+		}
+	},
+	oncreate() {
+		this.recalculate()
+	},
+	methods: {
+		recalculate() {
+			const container = this.refs.container
+			this.set({ 
+				renderText: false, 
+				size: 'inherit' 
+			})
+			const size = getTextFitSize(container, this.get('text'))
+			this.set({ 
+				size: size + 'px',
+				renderText: true,
+			})
+		},
+		onResize() {
+			if (!this.get('resizing')) {
+				this.set({
+					resizing: true
+				})
+				window.requestAnimationFrame(() => {
+					this.recalculate()
+					this.set({
+						resizing: false
+					})
+				})
+			}
+		}
+	}
+}
+</script>
