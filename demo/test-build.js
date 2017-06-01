@@ -390,7 +390,7 @@ function create_main_fragment(state, component) {
 		target: p_1,
 		_root: component._root,
 		data: {
-			text: "Centered text makes me kind of happy y'all"
+			text: "Perfectly-fitting text makes me kind of happy y'all"
 		}
 	});
 
