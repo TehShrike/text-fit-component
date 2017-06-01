@@ -17,7 +17,8 @@
     "width",
     "text",
     "size",
-    "component"
+    "component",
+    "svelte"
   ],
   "author": "TehShrike",
   "license": "WTFPL",
