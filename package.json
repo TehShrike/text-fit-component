@@ -1,6 +1,6 @@
 {
   "name": "text-fit-component",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Fits text to match the width of its parent",
   "main": "build.js",
   "module": "build.mjs",
