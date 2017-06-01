@@ -6,6 +6,8 @@ Puts text inside of another element at just the right font size so that it perfe
 
 Uses [get-text-fit-size](https://github.com/TehShrike/get-text-fit-size/).
 
+Automatically adjust on window resize.
+
 ## Example
 
 ```html
