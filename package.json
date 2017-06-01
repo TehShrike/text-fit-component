@@ -1,0 +1,26 @@
+{
+  "name": "text-fit-component",
+  "version": "0.0.0",
+  "description": "Fits text to match the width of its parent",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TehShrike/text-fit-component.git"
+  },
+  "keywords": [
+    "fit",
+    "width",
+    "text",
+    "size",
+    "component"
+  ],
+  "author": "TehShrike",
+  "license": "WTFPL",
+  "bugs": {
+    "url": "https://github.com/TehShrike/text-fit-component/issues"
+  },
+  "homepage": "https://github.com/TehShrike/text-fit-component#readme"
+}
